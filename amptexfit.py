@@ -7,6 +7,8 @@ rc('text', usetex=True)
 rc('font',**{'family':'serif','serif':['Computer Modern Roman']})
 rc('font',size=18)
 
+fileloc = '/home/ian/python/xtomo/'
+
 def fe55fit( loc, peakx=[3025.,3300.], ev=[5.89875,6.49045], back=13):
     """ expecting two peaks for Fe-55 at 5.89875 and 6.49045 keV,
     however, data x range is not in keV but bins (requires fit),
@@ -93,47 +95,47 @@ def compare(inp=[102,103,104,105,1101], day=1150310000,time=[3845.45,5600.97,138
 
     txt=['no','5','3','1','no']
 
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[4])+'.txt')
+    x,y0,dat0 =  fe55fit(fileloc+str(day+inp[4])+'.txt')
     
     k0 = dat0[0]/time[4]/scipy.sqrt(scipy.pi*2*dat0[2])
     k1 = dat0[3]/time[4]/scipy.sqrt(scipy.pi*2*dat0[5])
     for i in xrange(len(inp)):
-        x,y0,dat1 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[i])+'.txt')
+        x,y0,dat1 =  fe55fit(fileloc+str(day+inp[i])+'.txt')
         print(i,1-dat1[0]/time[i]/k0/scipy.sqrt(scipy.pi*2*dat1[2]),1-dat1[3]/time[i]/k1/scipy.sqrt(scipy.pi*2*dat1[5]),txt[i])
 
 def compare2(inp=[1102,103,104,105,1101], day=1150310000,time=[5845.45,5600.97,13857.78,6963.35,11230.]):
 
     txt=['no','5','3','1','no']
 
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[4])+'.txt')
+    x,y0,dat0 =  fe55fit(fileloc+str(day+inp[4])+'.txt')
     
     k0 = dat0[0]/time[4]
     k1 = dat0[3]/time[4]
 
     for i in xrange(len(inp)):
 
-        x,y0,dat1 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[i])+'.txt')
+        x,y0,dat1 =  fe55fit(fileloc+str(day+inp[i])+'.txt')
         print(i,1-dat1[0]/time[i]/k0,1-dat1[3]/time[i]/k1,txt[i])
 
     
 def compare3(inp=[101,102,103,104,105,106,107,108], day=1150311000,time=[11230.98,5853.36,6389.85,8005.11,6291.73,6910.24,7658.35,7952.96]):
 
     txt = ['no foil','5','no','5','3','1','new','3 off axis']
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[0])+'.txt')
+    x,y0,dat0 =  fe55fit(fileloc+str(day+inp[0])+'.txt')
     
     k0 = dat0[0]/time[0]
     k1 = dat0[3]/time[0]
 
     for i in xrange(len(inp)):
 
-        x,y0,dat1 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[i])+'.txt')
+        x,y0,dat1 =  fe55fit(fileloc+str(day+inp[i])+'.txt')
         print(i,1-dat1[0]/time[i]/k0,1-dat1[3]/time[i]/k1,txt[i])
 
 
 def compare4(inp=[103,104,105,106,107,108], day=1150311000,time=[6389.85,8005.11,6291.73,6910.24,7658.35,7952.96]):
 
     txt = ['no','5','3','1','new','3 off axis']
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[0])+'.txt')
+    x,y0,dat0 =  fe55fit(fileloc+str(day+inp[0])+'.txt')
     
     k0 = dat0[0]/time[0]
     k1 = dat0[3]/time[0]
@@ -148,19 +150,19 @@ def compare5(inp=[103,104,105,106,107,108], day=1150311000,time=[6389.85,8005.11
 
     txt = ['no','5','3','1','new','3 off axis']
 
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[0])+'.txt')
+    x,y0,dat0 =  fe55fit(fileloc+str(day+inp[0])+'.txt')
     
     k0 = dat0[0]/time[0]/scipy.sqrt(scipy.pi*2*dat0[2])
     k1 = dat0[3]/time[0]/scipy.sqrt(scipy.pi*2*dat0[5])
     
     for i in xrange(len(inp)):
-        x,y0,dat1 =  fe55fit('/home/ian/python/xtomo/'+str(day+inp[i])+'.txt')
+        x,y0,dat1 =  fe55fit(fileloc+str(day+inp[i])+'.txt')
         print(i,1-dat1[0]/time[i]/k0/scipy.sqrt(scipy.pi*2*dat1[2]),1-dat1[3]/time[i]/k1/scipy.sqrt(scipy.pi*2*dat1[5]),txt[i])
 
 def Beatten(rho=1.848,thick=50e-4,peak=[5.89875,6.49045]):
     mu = scipy.loadtxt('bemassatten.txt').T
     inter = scipy.interpolate.interp1d(mu[0]*1e3,scipy.exp(-mu[2]*rho*thick),kind='cubic')
-    x,y0,dat0 =  fe55fit('/home/ian/python/xtomo/1150311103.txt')
+    x,y0,dat0 =  fe55fit(fileloc+'1150311103.txt')
     data = scipy.exp(-mu[1]*rho*thick)
     xd = scipy.linspace(1,10,1e3)
     plt.semilogy(xd,1-inter(xd),label='50$\mu$m foil')
@@ -179,7 +181,7 @@ def Beatten(rho=1.848,thick=50e-4,peak=[5.89875,6.49045]):
 def fit2(loc=['1150311103','1150311104'], time = [6389.85,8005.11], peakx=[3025.,3300.], ev=[5.89875,6.49045], back=13,txt=['no foil','array 5']):    
 
     for i in xrange(len(loc)):
-        x,y,popt = fe55fit('/home/ian/python/xtomo/'+loc[i]+'.txt',
+        x,y,popt = fe55fit(fileloc+loc[i]+'.txt',
                            peakx = peakx,
                            ev = ev,
                            back = back)
